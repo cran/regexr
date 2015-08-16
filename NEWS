@@ -16,6 +16,19 @@ And constructed with the following guidelines:
   (and resets the patch)
 * Bug fixes and misc changes bumps the patch
 
+regexr 1.1.0
+----------------------------------------------------------------
+
+CHANGES
+
+* `as.regex` no longer converts character strings ro `regex` class.  This is 
+  because the function used
+  'http://rick.measham.id.au/paste/explain' for parsing, however this website 
+  appears not  to be operational.  This functionality may return if the website 
+  is again available or if a suitable replacement regex parser is found.  
+  If you have a suggested web based parser please make a suggestion via:
+  https://github.com/trinker/regexr/issues.
+
 regexr 1.0.0 - 1.0.2
 ----------------------------------------------------------------
 

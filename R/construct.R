@@ -48,7 +48,7 @@
 #' }
 #' 
 #' library(qdapRegex)
-#' explain(m)
+#' ## explain(m)
 #' 
 #' ## Example 2 (Twitter Handle 2 ways)
 #' ## Bigger Sub-expressions
@@ -75,7 +75,7 @@
 #' subs(twitter)
 #' summary(twitter)
 #' test(twitter)
-#' explain(twitter)
+#' ## explain(twitter)
 #' 
 #' x <- c("@@hadley I like #rstats for #ggplot2 work.",
 #'     "Difference between #magrittr and #pipeR, both implement pipeline operators for #rstats:
@@ -102,7 +102,7 @@
 #' subs(combined)
 #' summary(combined)
 #' test(combined)
-#' explain(combined)
+#' ## explain(combined)
 #' 
 #' ## Different Structure (no names): Example from Martin Fowler: 
 #' ## *Note: Fowler argues for improved choices in regex representation

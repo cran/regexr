@@ -16,9 +16,19 @@
 #' @param \ldots Other arguments passed to \code{as.regexr} methods.
 #' @return Returns a dual \code{regexr} and \code{reverse_construct} object.
 #' @export
-#' @note \code{as.regexr.character} utilizes \url{http://rick.measham.id.au/paste/explain}
-#' to break the regular expression into sub-expressions.
+#' @note \code{as.regexr.character} not currently supported as it utilized 
+#' 'http://rick.measham.id.au/paste/explain', however this website appears not 
+#' to be operational.  This functionality may return if the website is again 
+#' available or if a suitable replacement regex parser is found.  
+#' 
+#' If you have a suggested web based parser please make a suggestion via:
+#' \url{https://github.com/trinker/regexr/issues}.
+## @note \code{as.regexr.character} utilizes \url{http://rick.measham.id.au/paste/explain}
+## to break the regular expression into sub-expressions.
 #' @examples
+#' \dontrun{
+#' ## NOTE: These examples will likely fail unless 
+#' ## http://rick.measham.id.au/paste/explain becomes available again.
 #' library("qdapRegex")
 #' (myregex <- grab("@@rm_time2"))
 #' out <- as.regexr(myregex)
@@ -30,16 +40,15 @@
 #' test(out)
 #' get_construct(out)
 #' 
-#' \dontrun{
 #' ## On Windows copy to clipboard
 #' get_construct(out, file="clipboard")
-#' }
 #' 
 #' ## No names & comments behind sub-expressions
 #' myregex2 <- "(\\s*[a-z]+)([^)]+\\))"
 #' get_construct(as.regexr(myregex2, names=FALSE))
 #' get_construct(as.regexr(myregex2, names=FALSE, names.above = TRUE, 
 #'     comments.below = TRUE))
+#' }
 as.regexr <- function(x, names = TRUE, comments = TRUE, names.above = FALSE, 
     comments.below = FALSE, ...){
     UseMethod("as.regexr")
@@ -68,8 +77,17 @@ as.regexr <- function(x, names = TRUE, comments = TRUE, names.above = FALSE,
 as.regexr.character <- function(x, names = TRUE, comments = TRUE, 
     names.above = FALSE, comments.below = FALSE, ...){
 
-    out <- regex_break_down(x)
+    out <- try(regex_break_down(x))
 
+    if (inherits(out, "try-error")) { # added 8-16-15 when http://rick.measham.id.au/paste went down
+        message("The `http://rick.measham.id.au/paste/explain` regex conversion no longer", 
+            "\nworks as the website currently does not work.\n\n",
+            "The regex conversion functionality will return if the website becomes",
+            "\noperational again or if a suitable substitute can be found."
+        )
+        return(NULL)
+    }
+    
     loc <- gregexpr("EXPLANATION", out[1])
     out <- out[-c(1:2)]
 
@@ -101,9 +119,9 @@ as.regexr.character <- function(x, names = TRUE, comments = TRUE,
     out <- x
 
     class(out) <- c("regexr", "reverse_construct", class(out))
-    attributes(out)[["subs"]] <- setNames(sapply(pieces4regexr, "[", 1), 
+    attributes(out)[["subs"]] <- stats::setNames(sapply(pieces4regexr, "[", 1), 
         names(pieces4regexr))
-    attributes(out)[["comments"]] <- setNames(sapply(pieces4regexr, "[", 2), 
+    attributes(out)[["comments"]] <- stats::setNames(sapply(pieces4regexr, "[", 2), 
         names(pieces4regexr))
 
     if (!comments.below) {
@@ -221,6 +239,7 @@ as.regexr.default <- as.regexr.character
 #' \code{regexr} object.
 #' @export
 #' @examples
+#' \dontrun{
 #' library("qdapRegex")
 #' (myregex <- grab("@@rm_time2"))
 #' out <- as.regexr(myregex)
@@ -232,7 +251,6 @@ as.regexr.default <- as.regexr.character
 #' test(out)
 #' get_construct(out)
 #' 
-#' \dontrun{
 #' ## On Windows copy to clipboard
 #' get_construct(out, file="clipboard")
 #' }
